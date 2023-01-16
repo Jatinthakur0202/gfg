@@ -98,82 +98,37 @@ struct Node
 
 class Solution
 {
-public:
-    int maxNode=0, maxGCD1=0;
+    int ans, g;
 
-    int GCD (int a, int b)
-
-     {
-
-         if(a==0) return b;
-
-         else
-
-           return GCD(b%a, a);
-
-     }
-
- 
-
-    void Solve(Node* root)
-
-     {
-
-          if(root) 
-
-        {       
-
-        if(root->left && root->right)
-
-          {
-
-              int tempGCD=GCD(root->left->data, root->right->data );
-
-              if(tempGCD == maxGCD1 )
-
-               {
-
-                   maxNode=max(maxNode, root->data);
-
-               }
-
-               else if(tempGCD > maxGCD1)
-
-                {
-
-                    maxGCD1=tempGCD;
-
-                    maxNode=root->data;
-
-                }
-
-          }
-
-          
-
-          if(root->left) Solve(root->left) ;
-
-          if(root->right) Solve(root->right);
-
-        }
-
-     }
-
- 
-
-    int maxGCD( Node* root)
-
+    void solve(Node *root)
     {
+        if(root==NULL)
+        return;
+        if(root->left!=NULL && root->right!=NULL)
+        {
+            int h=__gcd(root->left->data,root->right->data);
+            if(h>g)
+            {
+                g=h;
+                ans=root->data;
+            }
+            else if(h==g)
+            {
+                ans=max(ans,root->data);
+            }
+        }
+        solve(root->left);
+        solve(root->right);
+    }
 
-        //may2021
-
-        Solve(root);
-
-          return maxNode;
-
+public:
+    int maxGCD(Node* root) {
+        ans = 0;
+        g = 0;
+        solve(root);
+        return ans;
     }
 };
-
 
 
 
