@@ -10,54 +10,26 @@ using namespace std;
 
 class Solution{
     public:
-    
+    int fit(int a,int b){
+        if(a>b){
+            a = a/2;
+            return 1 + fit(a,b);
+        }
+        else if(a <= b){
+            return 0;
+        }
+    }
+
+    int carpetBox(int A, int B, int C, int D){
         //code here
-      int carpetBox(int A, int B, int C, int D){
-
-        //code here
-
-        int ans1=0;
-
-        int ans2=0;
-
-        int a=A, b=B, c=C ,d=D;
-
-        while(A > C){
-
-            A/=2;
-
-            ans1++;
-
-        }
-
-        while(B >D){
-
-            B/=2;
-
-            ans1++;
-
-        }
-
-        
-
-        while(a> d){
-
-            a/=2;
-
-            ans2++;
-
-        }
-
-        while(b >c){
-
-            b/=2;
-
-            ans2++;
-
-        }
-
- return min(ans1 , ans2);
-
+        int ans = 0;
+        int a = A;
+        int b = B;
+        int c = C;
+        int d = D;
+        int ans1 = fit(a,c) + fit(b,d);
+        int ans2 = fit(a,d) + fit(b,c);
+        return min(ans1 , ans2);
     }
 };
 
