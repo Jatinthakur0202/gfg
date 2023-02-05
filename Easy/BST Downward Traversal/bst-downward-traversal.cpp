@@ -36,78 +36,40 @@ struct Node {
 
 class Solution{
 public:
-Node* searchNode(Node* root, int target){
-    if(!root) return NULL;
-
-        
-
-        if(root->data==target){
-
-            return root;
-
-        }else if(root->data>target){
-
-            return searchNode(root->left, target);
-
-        }else{
-
-            return searchNode(root->right, target);
-
+    long long int res;
+    Node *target_node;
+    void down(Node *node,int direction){
+        if(node){
+            if(direction == 0)
+                res += node->data;
+            down(node->left, direction-1);
+            down(node->right, direction+1);
         }
-
-        return NULL;
-
     }
-
-    
-
-    void solve(Node* root, long long int &ans, int level){
-
-        
-
-        if(!root) return;
-
-        
-
-        if(level==0) ans+=root->data;
-
-        
-
-        solve(root->left, ans, level-1);
-
-        solve(root->right, ans, level+1);
-
-        
-
+    void find(Node *node,int target){
+        if(target_node == NULL){
+            if (node){
+                if(node->data > target)
+                    find(node->left, target);
+                else if(node->data < target)
+                    find(node->right, target);
+                else{
+                    target_node = node;
+                    down(node, 0);
+                }
+            }
+        }
     }
-
- 
-
+            
     long long int verticallyDownBST(Node *root,int target){
-
-        // Code here
-
-        if(!root) return -1;
-
         
-
-        Node* newRoot=searchNode(root, target);
-
-        
-
-        if(!newRoot) return -1;
-
-        
-
-        long long int ans=0;
-
-        
-
-        solve(newRoot, ans, 0);
-
-        return ans-newRoot->data;
-
+        res = -target;
+        target_node = NULL;
+        find(root, target);
+        if(res == -target) return -1;
+        return res;
     }
+
 };
 
 //{ Driver Code Starts.
