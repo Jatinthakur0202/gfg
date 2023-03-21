@@ -11,33 +11,24 @@ using namespace std;
 
 class Solution{
     public:
+    unordered_map<string, bool> mp;
+    bool solve(string s1, string s2){
+        if(s1 == s2) return true;
+        if(s1.length() <= 1) return false;
+        string key = s1 + " " + s2;
+        if(mp.find(key) != mp.end()) return mp[key];
+        int n = s1.length();
+        bool flag = false;
+        for(int i = 1; i < n; i++){
+            if((solve(s1.substr(0, i), s2.substr(n - i, i)) && solve(s1.substr(i, n - i), s2.substr(0, n - i))) || (solve(s1.substr(0, i), s2.substr(0, i)) && solve(s1.substr(i, n - i), s2.substr(i, n - i)))){
+                flag = true;
+                break;
+            }
+        }
+        return mp[key] = flag;
+    }
     bool isScramble(string S1, string S2){
-        //code here
-         if(S1.length() != S2.length())
-            return false;
-        if(S1.length() == 0 || S1 == S2)
-            return true;
-        int n = S1.length();
-        bool dp[n][n][n];
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                dp[i][j][0] = (S1[i] == S2[j]);
-            }
-        }
-        for(int len=2;len<=n;len++){
-            for(int i=0;i<=n-len;i++){
-                for(int j=0;j<=n-len;j++){
-                    dp[i][j][len-1] = false;
-                    for(int k=1;k<len;k++){
-                        if((dp[i][j][k-1] && dp[i+k][j+k][len-k-1]) || (dp[i][j+len-k][k-1] && dp[i+k][j][len-k-1])){
-                            dp[i][j][len-1] = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return dp[0][0][n-1];
+        return solve(S1, S2);
     }    
 };
 
