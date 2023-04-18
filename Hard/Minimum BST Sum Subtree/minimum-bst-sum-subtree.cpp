@@ -84,39 +84,49 @@ public:
 
 class Solution {
 public:
- int targ=0,ans=INT_MAX,l=0;
-    bool check(Node* root,int r1,int r2)
-    {
-        if(root==NULL)
-            return true;
-        if(root->data<=r1||root->data>=r2)
+ int mini;
+    
+    bool checkBST(Node *root, long long minVal, long long maxVal) {
+        if(!root) return true;
+        
+        if(root->data <= minVal or root->data >= maxVal)
             return false;
-        l++;
-        return check(root->left,r1,root->data)&&check(root->right,root->data,r2);
+        
+        return checkBST(root->left, minVal, root->data) and checkBST(root->right, root->data, maxVal);
     }
-    int getSum(Node* root)
-    {
-        if(root==NULL)
-            return 0;
-        int sum=root->data+getSum(root->left)+getSum(root->right);
-        // cout<<sum<<" ";
-        if(sum==targ)
-        {
-            l=0;
-            if(check(root,INT_MIN,INT_MAX))
-            {
-                // cout<<"yes";
-                ans=min(ans,l);
+    
+    int sum(Node *root, int &count) {
+        if(!root) return 0;
+        count++;
+        return root->data + sum(root->left, count) + sum(root->right, count);
+    }
+    
+    void solve(Node *root, int k) {
+        if(!root) return;
+        
+        if(!root->left and !root->right) {
+            if(root->data == k) {
+                mini = 1;
+                return;
             }
         }
-        return sum;
+        
+        if(checkBST(root, INT_MIN, INT_MAX)) {
+            int count = 0;
+            int s = sum(root, count);
+            if(s == k)
+                mini = min(mini, count);
+        }
+        
+        solve(root->left, k);
+        solve(root->right, k);
     }
+    
     int minSubtreeSumBST(int target, Node *root) {
-        // code here
-        targ=target;
-        getSum(root);
-        return ans==INT_MAX?-1:ans;
-}
+        mini = INT_MAX;
+        solve(root, target);
+        return mini == INT_MAX ? -1 : mini;
+    }
 };
 
 //{ Driver Code Starts.
